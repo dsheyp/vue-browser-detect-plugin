@@ -11,12 +11,18 @@ const VueBrowserDetect = {
     browserObj.isFirefox = /Firefox/.test(navigator.userAgent);
     // Safari 3.0+
     /*eslint-disable */
-    browserObj.isSafari =
-      /constructor/i.test(window.HTMLElement) ||
-      (function(p) {
-        return p.toString() === "[object SafariRemoteNotification]";
-      })(!window["safari"] || safari.pushNotification);
-    /*eslint-ensable */
+    browserObj.isSafari = (function() {
+    	if(/constructor/i.test(window.HTMLElement)) {
+    		return true;
+    	}
+    	else if(!window['safari'] || (window.safari && window.safari.pushNotification && window.safari.pushNotification.toString() === '[object SafariRemoteNotification]')) {
+    		return true;
+    	}
+    	else {
+    		return /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
+    	}
+		})(window);
+    /*eslint-enable */
     // Internet Explorer 6-11
     browserObj.isIE = /*@cc_on!@*/ false || !!document.documentMode;
     // Edge 20+
